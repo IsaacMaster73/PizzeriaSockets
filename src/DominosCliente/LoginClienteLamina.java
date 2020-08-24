@@ -88,8 +88,8 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
            try {
 				Socket socket1 = new Socket("192.168.1.101" , 9999);
 				DataOutputStream flujo_salida = new DataOutputStream(socket1.getOutputStream());
-//				flujo_salida.writeUTF(campo.getText());
-//				flujo_salida.close();
+				flujo_salida.writeUTF(userText +" "+ pwdText);
+				flujo_salida.close();
 				
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block

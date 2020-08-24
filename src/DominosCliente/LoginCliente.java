@@ -3,6 +3,8 @@
  */
 package DominosCliente;
 
+import javax.swing.JFrame;
+
 /**
  * @author isaacmontielsanchez
  *
@@ -15,6 +17,8 @@ public class LoginCliente {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+		VistaLogin vcliente = new VistaLogin();
+		vcliente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 }

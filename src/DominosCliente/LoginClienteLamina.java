@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
@@ -21,6 +22,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import Seriales.Credenciales;
+import Seriales.Sesion;
 
 public class LoginClienteLamina extends JFrame implements ActionListener {
  
@@ -32,7 +34,7 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
     JButton loginButton=new JButton("Ingresar");
     JButton resetButton=new JButton("Limpiar campos");
     JCheckBox verContra=new JCheckBox("Mostar contrasaña");
- 
+    Sesion seRe;
  
     LoginClienteLamina()
     {
@@ -92,10 +94,22 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
            try {
 				Socket socket1 = new Socket("192.168.1.101" , 9999);
 				Credenciales creden  = new Credenciales();
+				seRe = new Sesion();
 				creden.setUsuario(userText);
 				creden.setContra(pwdText);
 				ObjectOutputStream credenciales = new ObjectOutputStream(socket1.getOutputStream());
 				credenciales.writeObject(creden);
+				
+				
+		       	ObjectInputStream pack_int = new ObjectInputStream(socket1.getInputStream());
+				seRe = (Sesion) pack_int.readObject();
+				
+		           if(seRe.isSe_ini() == true) {
+						JOptionPane.showMessageDialog(this, "Ingreso Correcto");
+					}else {
+						JOptionPane.showMessageDialog(this, "Credenciales invalidas\nPorfavor intente de nuevo.");
+					}
+
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -103,14 +117,11 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				System.out.println(e1.getMessage());
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
            
-           if (userText.equalsIgnoreCase("dominos") && pwdText.equalsIgnoreCase("12345")) {
-               JOptionPane.showMessageDialog(this, "Ingreso Correcto");
-           } else {
-               JOptionPane.showMessageDialog(this, "Credenciales invalidas\nPorfavor intente de nuevo.");
-           }
-
        }
        //Coding Part of RESET button
        if (e.getSource() == resetButton) {

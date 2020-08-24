@@ -6,6 +6,7 @@ package DominosServer;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 
 import DominosServerQuerys.Login;
 import Seriales.Credenciales;
+import Seriales.Sesion;
 
 /**
  * @author isaacmontielsanchez
@@ -40,10 +42,12 @@ public class ServerSocketDominos implements Runnable {
 				usuario_ser = (Credenciales) pack_int.readObject();
 				
 				Login log = new Login(usuario_ser.getUsuario(),usuario_ser.getContra());
+				Sesion seRe;
+				seRe = log.se(); 
+					ObjectOutputStream outSt = new ObjectOutputStream(sock1.getOutputStream());
+					outSt.writeObject(seRe);
 				
-				System.out.println(usuario_ser.getUsuario());
-				System.out.println(usuario_ser.getContra());
-				sock1.close();
+				
 			}
 			
 		} catch (IOException | ClassNotFoundException e) {

@@ -24,4 +24,5 @@ public class Credenciales implements Serializable{
 	}
 	String usuario = "";
 	String contra = "";
+	
 }

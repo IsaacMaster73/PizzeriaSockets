@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -17,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import Seriales.Credenciales;
 
 public class LoginClienteLamina extends JFrame implements ActionListener {
  
@@ -87,10 +91,11 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
            
            try {
 				Socket socket1 = new Socket("192.168.1.101" , 9999);
-				DataOutputStream flujo_salida = new DataOutputStream(socket1.getOutputStream());
-				flujo_salida.writeUTF(userText +" "+ pwdText);
-				flujo_salida.close();
-				
+				Credenciales creden  = new Credenciales();
+				creden.setUsuario(userText);
+				creden.setContra(pwdText);
+				ObjectOutputStream credenciales = new ObjectOutputStream(socket1.getOutputStream());
+				credenciales.writeObject(creden);
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -123,4 +128,7 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
 
        }
    }
+   
+   
 }
+

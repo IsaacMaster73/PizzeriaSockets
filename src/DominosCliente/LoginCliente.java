@@ -18,7 +18,7 @@ public class LoginCliente {
 		// TODO Auto-generated method stub
 
 		VistaLogin vcliente = new VistaLogin();
-		vcliente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	}
 
 }

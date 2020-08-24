@@ -7,16 +7,20 @@ import javax.swing.JFrame;
 
 /**
  * @author isaacmontielsanchez
- *
+ 
  */
-public class VistaLogin extends JFrame {
+public class VistaLogin{
 	
 	public VistaLogin(){
-		setBounds(1200,300,280,350);
 		LoginClienteLamina lcliente = new LoginClienteLamina();
-		add(lcliente);
-		setVisible(true);
+		 
+		lcliente.setTitle("Dominos");
+		lcliente.setVisible(true);
+		lcliente.setBounds(10,10,370,600);
+		lcliente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		lcliente.setResizable(false);
 		
+				
 	}
 
 }

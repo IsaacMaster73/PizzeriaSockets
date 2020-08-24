@@ -77,10 +77,29 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
    public void actionPerformed(ActionEvent e) {
        //Coding Part of LOGIN button
        if (e.getSource() == loginButton) {
+    	   
+    	   
+    	   
            String userText;
            String pwdText;
            userText = inputUsuario.getText();
            pwdText = inputContra.getText();
+           
+           try {
+				Socket socket1 = new Socket("192.168.1.101" , 9999);
+				DataOutputStream flujo_salida = new DataOutputStream(socket1.getOutputStream());
+//				flujo_salida.writeUTF(campo.getText());
+//				flujo_salida.close();
+				
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				System.out.println(e1.getMessage());
+			}
+           
            if (userText.equalsIgnoreCase("dominos") && pwdText.equalsIgnoreCase("12345")) {
                JOptionPane.showMessageDialog(this, "Ingreso Correcto");
            } else {

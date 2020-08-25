@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author isaacmontielsanchez
  *
  */
-public class Credenciales implements Serializable{
+public class Credenciales implements Serializable {
 	public String getUsuario() {
 		return usuario;
 	}

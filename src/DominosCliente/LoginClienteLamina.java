@@ -22,6 +22,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import Seriales.Credenciales;
+import Seriales.PaqueteObjetos;
 import Seriales.Sesion;
 
 public class LoginClienteLamina extends JFrame implements ActionListener {
@@ -34,8 +35,9 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
     JButton loginButton=new JButton("Ingresar");
     JButton resetButton=new JButton("Limpiar campos");
     JCheckBox verContra=new JCheckBox("Mostar contrasaña");
-    Sesion seRe;
- 
+    
+    
+    
     LoginClienteLamina()
     {
         setLayoutManager();
@@ -85,36 +87,36 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
    public void actionPerformed(ActionEvent e) {
        //Coding Part of LOGIN button
        if (e.getSource() == loginButton && inputUsuario.getText() != null &&  inputContra.getText() != null) {
-    	   
-    	   
-    	   
+    	  
            String userText;
            String pwdText;
            userText = inputUsuario.getText();
            pwdText = inputContra.getText();
-           
+           PaqueteObjetos paquete= new PaqueteObjetos (); 
            try {
 				Socket socket1 = new Socket("192.168.1.101" , 9999);
-				Credenciales creden  = new Credenciales();
-				seRe = new Sesion();
-				creden.setUsuario(userText);
-				creden.setContra(pwdText);
-				ObjectOutputStream credenciales = new ObjectOutputStream(socket1.getOutputStream());
-				credenciales.writeObject(creden);
+				Credenciales credenciales  = new Credenciales();
+				credenciales.setUsuario(userText);
+				credenciales.setContra(pwdText);
+				ObjectOutputStream ObjSaliente = new ObjectOutputStream(socket1.getOutputStream());
+				paquete.setTipo_objeto(1);
+				paquete.setCredenciales(credenciales);
+				ObjSaliente.writeObject(paquete);
 				
 				
-		       	ObjectInputStream pack_int = new ObjectInputStream(socket1.getInputStream());
-				seRe = (Sesion) pack_int.readObject();
 				
-		           if(seRe.isSe_ini() == true) {
+		       	ObjectInputStream paqueteResp = new ObjectInputStream(socket1.getInputStream());
+		       	paquete = (PaqueteObjetos) paqueteResp.readObject();
+				
+		           if(paquete.getSesion().isSe_ini() == true) {
 //						JOptionPane.showMessageDialog(this, "Ingreso Correcto");
 						this.dispose();
-						VentanaSelectora vSelec = new VentanaSelectora();
+						VentanaSelectora vSelec = new VentanaSelectora(paquete);
 						vSelec.setVisible(true);
 					}else {
 						JOptionPane.showMessageDialog(this, "Credenciales invalidas\nPorfavor intente de nuevo.");
 					}
-
+		           socket1.close();
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

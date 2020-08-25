@@ -5,8 +5,21 @@ package DominosCliente;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
+
+import Seriales.Credenciales;
+import Seriales.OrdenDeCompra;
+import Seriales.PaqueteObjetos;
+import Seriales.Sesion;
+
 
 /**
  * @author isaacmontielsanchez
@@ -39,52 +52,25 @@ public class VentanaSelectora extends JFrame
     JRadioButton mexicana;
     JRadioButton queso;
     private ButtonGroup tipo_grp;
-	
-    private JLabel title; 
-    private JLabel name; 
-    private JTextField tname; 
-    private JLabel gender; 
-    private JRadioButton male; 
-    private JRadioButton female; 
-    private ButtonGroup gengp; 
-    private JLabel dob; 
-    private JComboBox date; 
-    private JComboBox month; 
-    private JComboBox year; 
     private JLabel add; 
-    private JTextArea tadd; 
-    private JCheckBox term; 
-    private JButton sub; 
-    private JButton reset; 
-    private JTextArea tout; 
-    private JLabel res; 
+    private JLabel title; 
     private JTextArea resadd; 
-  
-    private String dates[] 
-        = { "1", "2", "3", "4", "5", 
-            "6", "7", "8", "9", "10", 
-            "11", "12", "13", "14", "15", 
-            "16", "17", "18", "19", "20", 
-            "21", "22", "23", "24", "25", 
-            "26", "27", "28", "29", "30", 
-            "31" }; 
-    private String months[] 
-        = { "Jan", "feb", "Mar", "Apr", 
-            "May", "Jun", "July", "Aug", 
-            "Sup", "Oct", "Nov", "Dec" }; 
-    private String years[] 
-        = { "1995", "1996", "1997", "1998", 
-            "1999", "2000", "2001", "2002", 
-            "2003", "2004", "2005", "2006", 
-            "2007", "2008", "2009", "2010", 
-            "2011", "2012", "2013", "2014", 
-            "2015", "2016", "2017", "2018", 
-            "2019" }; 
+    private JButton sub; 
+    private JTextArea tadd; 
+    JLabel labelTelefonoVal;
+    JLabel labelDirVal;
+
+    
+    String tamano=null;
+    String tipo=null;
+    String estilo=null;
+    PaqueteObjetos paquete;
   
     // constructor, to initialize the components 
     // with default values. 
-    public VentanaSelectora() 
+    public VentanaSelectora(PaqueteObjetos paquete) 
     { 
+    	this.paquete = paquete;
         setTitle("Dominos"); 
         setBounds(100, 90, 600, 700); 
         setDefaultCloseOperation(EXIT_ON_CLOSE); 
@@ -111,18 +97,21 @@ public class VentanaSelectora extends JFrame
         familiar.setSelected(true); 
         familiar.setSize(100, 30); 
         familiar.setLocation(200, 100); 
+        familiar.setActionCommand("familiar");
         c.add(familiar); 
         mediana = new JRadioButton("Mediana"); 
         mediana.setFont(new Font("Arial", Font.PLAIN, 15)); 
         mediana.setSelected(true); 
         mediana.setSize(100, 30); 
+        mediana.setActionCommand("mediana");
         mediana.setLocation(300, 100); 
         c.add(mediana);
         personal = new JRadioButton("Personal"); 
         personal.setFont(new Font("Arial", Font.PLAIN, 15)); 
         personal.setSelected(true); 
         personal.setSize(100, 30); 
-        personal.setLocation(400, 100); 
+        personal.setLocation(400, 100);
+        personal.setActionCommand("personal");
         c.add(personal);
 
         tam_grp = new ButtonGroup(); 
@@ -143,20 +132,23 @@ public class VentanaSelectora extends JFrame
         espe.setSelected(true); 
         espe.setSize(100, 30); 
         espe.setLocation(200, 150); 
+        espe.setActionCommand("especial");
         c.add(espe); 
         
         sarten = new JRadioButton("Sarten"); 
         sarten.setFont(new Font("Arial", Font.PLAIN, 15)); 
         sarten.setSelected(true); 
         sarten.setSize(100, 30); 
-        sarten.setLocation(300, 150); 
+        sarten.setLocation(300, 150);
+        sarten.setActionCommand("sarten");
         c.add(sarten);
         
         orilla = new JRadioButton("Orilla de Queso"); 
         orilla.setFont(new Font("Arial", Font.PLAIN, 15)); 
         orilla.setSelected(true); 
         orilla.setSize(150, 30); 
-        orilla.setLocation(400, 150); 
+        orilla.setLocation(400, 150);
+        orilla.setActionCommand("orilla");
         c.add(orilla);
 
         estilo_grp = new ButtonGroup(); 
@@ -178,24 +170,28 @@ public class VentanaSelectora extends JFrame
          peperoni.setFont(new Font("Arial", Font.PLAIN, 15)); 
          peperoni.setSelected(true); 
          peperoni.setSize(100, 30); 
-         peperoni.setLocation(200, 200); 
+         peperoni.setLocation(200, 200);
+         peperoni.setActionCommand("peperoni");
          c.add(peperoni);
          hawaiana = new JRadioButton("Hawaina");   
          hawaiana.setFont(new Font("Arial", Font.PLAIN, 15)); 
          hawaiana.setSelected(true); 
          hawaiana.setSize(100, 30); 
+         hawaiana.setActionCommand("hawaiana");
          hawaiana.setLocation(300, 200); 
          c.add(hawaiana);
          mexicana  = new JRadioButton("Mexicana");
          mexicana.setFont(new Font("Arial", Font.PLAIN, 15)); 
          mexicana.setSelected(true); 
-         mexicana.setSize(100, 30); 
+         mexicana.setSize(100, 30);
+         mexicana.setActionCommand("mexicana");
          mexicana.setLocation(400, 200); 
          c.add(mexicana);
          queso = new JRadioButton("Queso");
          queso.setFont(new Font("Arial", Font.PLAIN, 15)); 
          queso.setSelected(true); 
          queso.setSize(100, 30); 
+         queso.setActionCommand("queso");
          queso.setLocation(500, 200); 
          c.add(queso);
          tipo_grp = new ButtonGroup(); 
@@ -217,6 +213,12 @@ public class VentanaSelectora extends JFrame
          telefono.setLocation(200, 250); 
          c.add(telefono); 
         
+         labelTelefonoVal = new JLabel(""); 
+         labelTelefonoVal.setFont(new Font("Arial", Font.PLAIN,12)); 
+         labelTelefonoVal.setSize(250, 30); 
+         labelTelefonoVal.setLocation(350, 250); 
+         c.add(labelTelefonoVal); 
+         
         add = new JLabel("Dirección"); 
         add.setFont(new Font("Arial", Font.PLAIN, 20)); 
         add.setSize(100, 20); 
@@ -229,6 +231,13 @@ public class VentanaSelectora extends JFrame
         tadd.setLocation(200, 300); 
         tadd.setLineWrap(true); 
         c.add(tadd); 
+        
+        labelDirVal = new JLabel(""); 
+        labelDirVal.setFont(new Font("Arial", Font.PLAIN,12)); 
+        labelDirVal.setSize(300, 30); 
+        labelDirVal.setLocation(200, 500); 
+        c.add(labelDirVal); 
+        
   
         sub = new JButton("Comprar"); 
         sub.setFont(new Font("Arial", Font.PLAIN, 20)); 
@@ -247,6 +256,65 @@ public class VentanaSelectora extends JFrame
     // by the user and act accordingly 
     public void actionPerformed(ActionEvent e) 
     { 
-       
+    	tamano= this.tam_grp.getSelection().getActionCommand();
+    	estilo= this.estilo_grp.getSelection().getActionCommand();
+    	tipo= this.tipo_grp.getSelection().getActionCommand();
+    	boolean valiFon = validTel(telefono.getText());
+    	boolean valDir = !tadd.getText().isEmpty();
+    	
+    
+    	if(!valiFon ){
+    		this.labelTelefonoVal.setText("* porfavor llene los campos correctamente");
+    	}else {
+    		this.labelTelefonoVal.setText("");
+    	}
+    	
+    	if(!valDir){
+    		this.labelDirVal.setText("* porfavor llene los campos correctamente");
+    	}else {
+    		this.labelDirVal.setText("");
+    	}
+    	if(valiFon && valDir) {
+    		 try {
+ 				Socket socket1 = new Socket("192.168.1.101" , 9999);
+ 				ObjectOutputStream ObjSaliente = new ObjectOutputStream(socket1.getOutputStream());
+				paquete.setTipo_objeto(2);
+				OrdenDeCompra orden = new OrdenDeCompra();
+				orden.setDireccion(tadd.getText());
+				orden.setEstilo(estilo);
+				orden.setTamano(tamano);
+				orden.setTelefono(telefono.getText());
+				orden.setTipo(tipo);
+				paquete.setOrden(orden);
+				ObjSaliente.writeObject(paquete);
+				
+				
+
+		       	ObjectInputStream paqueteResp = new ObjectInputStream(socket1.getInputStream());
+		       	paquete = (PaqueteObjetos) paqueteResp.readObject();
+		       	JOptionPane.showMessageDialog(this, "SU PEDIDO FUE REALIZADO CON EXITO \n FOLIO : "+paquete.getOrden().getIdPedido()+"\n TOTAL = "+ paquete.getOrden().getPrecio() + "\nLLEGARA ALA DIRECCION : " + paquete.getOrden().getDireccion()  );
+		       	tadd.setText("");
+		       	telefono.setText("");
+		       	
+ 			} catch (UnknownHostException e1) {
+ 				// TODO Auto-generated catch block
+ 				e1.printStackTrace();
+ 			} catch (IOException e1) {
+ 				// TODO Auto-generated catch block
+ 				e1.printStackTrace();
+ 				System.out.println(e1.getMessage());
+ 			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}
+    	
     } 
+    public boolean validTel(String esTel ) {
+        String pattern ="^(\\d{3}[- .]?){2}\\d{4}$";
+        return esTel.matches(pattern);
+
+        
+    }
+    
 }

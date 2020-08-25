@@ -13,7 +13,9 @@ import java.net.Socket;
 import java.sql.SQLException;
 
 import DominosServerQuerys.Login;
+import DominosServerQuerys.Pedido;
 import Seriales.Credenciales;
+import Seriales.PaqueteObjetos;
 import Seriales.Sesion;
 
 /**
@@ -35,17 +37,33 @@ public class ServerSocketDominos implements Runnable {
 		try {
 			ServerSocket servSock = new ServerSocket(9999);
 			
-			Credenciales usuario_ser ;
 			while(true) {
+				Credenciales credenciales;
+				PaqueteObjetos paquete;
 				Socket sock1=servSock.accept();
-				ObjectInputStream pack_int = new ObjectInputStream(sock1.getInputStream());
-				usuario_ser = (Credenciales) pack_int.readObject();
+				ObjectInputStream streamInput = new ObjectInputStream(sock1.getInputStream());
+				paquete = (PaqueteObjetos) streamInput.readObject();
+				switch(paquete.getTipo_objeto()) {
 				
-				Login log = new Login(usuario_ser.getUsuario(),usuario_ser.getContra());
-				Sesion seRe;
-				seRe = log.se(); 
+				case 1:
+					Login log = new Login(paquete.getCredenciales().getUsuario(),paquete.getCredenciales().getContra());
+					paquete.setSesion( log.se()); 
+					paquete.setTipo_objeto(3);
+					paquete.setCredenciales(null);
 					ObjectOutputStream outSt = new ObjectOutputStream(sock1.getOutputStream());
-					outSt.writeObject(seRe);
+					outSt.writeObject(paquete);
+					break;
+				
+				case 2:
+					Pedido pedido = new Pedido(paquete);
+					paquete = pedido.pq();
+					ObjectOutputStream outSt1 = new ObjectOutputStream(sock1.getOutputStream());
+					outSt1.writeObject(paquete);
+					break;
+					
+				
+				
+				}
 				
 				
 			}

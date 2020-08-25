@@ -42,6 +42,8 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
         setLocationAndSize();
         addComponentsToContainer();
         addActionEvent();//calling addActionEvent() method
+        inputUsuario.setText("is@gmail.com");
+        inputContra.setText("noseguro");
  
     }
    public void setLayoutManager()
@@ -82,7 +84,7 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
    @Override
    public void actionPerformed(ActionEvent e) {
        //Coding Part of LOGIN button
-       if (e.getSource() == loginButton) {
+       if (e.getSource() == loginButton && inputUsuario.getText() != null &&  inputContra.getText() != null) {
     	   
     	   
     	   
@@ -105,7 +107,10 @@ public class LoginClienteLamina extends JFrame implements ActionListener {
 				seRe = (Sesion) pack_int.readObject();
 				
 		           if(seRe.isSe_ini() == true) {
-						JOptionPane.showMessageDialog(this, "Ingreso Correcto");
+//						JOptionPane.showMessageDialog(this, "Ingreso Correcto");
+						this.dispose();
+						VentanaSelectora vSelec = new VentanaSelectora();
+						vSelec.setVisible(true);
 					}else {
 						JOptionPane.showMessageDialog(this, "Credenciales invalidas\nPorfavor intente de nuevo.");
 					}
